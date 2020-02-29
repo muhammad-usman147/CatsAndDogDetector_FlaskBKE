@@ -1,23 +1,26 @@
 from flask import Flask,jsonify,request,render_template
 #from keras.models import load_model
-import cv2
+import keras
+from keras.applications import VGG16
+import cv2  #success love successful company
 import numpy as np
 import os
 import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 app = Flask(__name__)
-modeldata = load_model('cats_and_dogs_small_1.h5')
+modeldata = VGG16(weights='imagenet',input_shape=(300,300,3),include_top=False)
 @app.route('/x',methods=['GET'])
 def Index_Function():
 
-    image = cv2.imread('cats.png')
+    image = cv2.imread('download.jpg')
     
 @app.route("/")
 def function():
     img = cv2.imread("cats.png")
     ximg = cv2.resize(img,(300,300))
-    result = modeldata.predict(ximg)
-    return str(result)
+    result = modeldata.predict(ximg.reshape(-1,300,300,3))
+    print(result)
+    return 's'
 @app.route("/show_image",methods=['POST'])
 def GetData():
     data = request
